@@ -28,7 +28,7 @@ balances these two costs, not just maximize accuracy.
 
 - [x] Phase 1 — Data Understanding
 - [x] Phase 2 — Exploratory Data Analysis
-- [ ] Phase 3 — Preprocessing
+- [x] Phase 3 — Preprocessing
 - [ ] Phase 4 — Baseline Model (Logistic Regression)
 - [ ] Phase 5 — Improved Model (XGBoost)
 - [ ] Phase 6 — Evaluation & Threshold Analysis
@@ -59,6 +59,14 @@ balances these two costs, not just maximize accuracy.
 ![Default Rate by Age](figures/03_default_rate_by_age.png)
 ![Correlation Heatmap](figures/04_correlation_heatmap.png)
 
+### Phase 3 — Preprocessing
+- Capped `RevolvingUtilizationOfUnsecuredLines` at 1.0 (physical maximum for a ratio)
+- Capped `DebtRatio` and `MonthlyIncome` at 99th percentile to remove data errors
+- Capped late payment columns at 10 (values of 96/98 are coded data errors)
+- Replaced invalid age value of 0 with median age
+- Imputed missing `MonthlyIncome` (20%) and `NumberOfDependents` (2.6%) with median
+- 80/20 train/test split with stratification to preserve class imbalance ratio
+- Applied StandardScaler — fit on train only to prevent data leakage
 
 ---
 
