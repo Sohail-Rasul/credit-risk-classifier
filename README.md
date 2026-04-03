@@ -46,6 +46,19 @@ balances these two costs, not just maximize accuracy.
 
 ![Class Imbalance](01_target_distribution.png)
 
+### Phase 2 — Exploratory Data Analysis
+- Late payment history is the strongest predictor of default — 
+  default rate rises sharply with number of late payments
+- Younger borrowers (<35) show higher default rates than older age groups
+- High credit utilization correlates with default
+- Severe outliers confirmed in `RevolvingUtilizationOfUnsecuredLines` 
+  and `DebtRatio`  (will be capped during preprocessing)
+- Age has at least one invalid value (0) — will be handled in preprocessing
+
+![Feature Distributions](outputs/figures/02_feature_distributions.png)
+![Default Rate by Age](outputs/figures/03_default_rate_by_age.png)
+![Correlation Heatmap](outputs/figures/04_correlation_heatmap.png)
+
 
 ---
 
