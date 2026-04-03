@@ -27,7 +27,7 @@ balances these two costs, not just maximize accuracy.
 ## Phases
 
 - [x] Phase 1 — Data Understanding
-- [ ] Phase 2 — Exploratory Data Analysis
+- [x] Phase 2 — Exploratory Data Analysis
 - [ ] Phase 3 — Preprocessing
 - [ ] Phase 4 — Baseline Model (Logistic Regression)
 - [ ] Phase 5 — Improved Model (XGBoost)
@@ -44,7 +44,7 @@ balances these two costs, not just maximize accuracy.
 - Missing values in `MonthlyIncome` (~20%) and `NumberOfDependents` (~2.6%)
 - Outliers detected in `RevolvingUtilizationOfUnsecuredLines`, `DebtRatio`, and `age`
 
-![Class Imbalance](01_target_distribution.png)
+![Class Imbalance](figures/01_target_distribution.png)
 
 ### Phase 2 — Exploratory Data Analysis
 - Late payment history is the strongest predictor of default — 
@@ -55,9 +55,9 @@ balances these two costs, not just maximize accuracy.
   and `DebtRatio`  (will be capped during preprocessing)
 - Age has at least one invalid value (0) — will be handled in preprocessing
 
-![Feature Distributions](outputs/figures/02_feature_distributions.png)
-![Default Rate by Age](outputs/figures/03_default_rate_by_age.png)
-![Correlation Heatmap](outputs/figures/04_correlation_heatmap.png)
+![Feature Distributions](figures/02_feature_distributions.png)
+![Default Rate by Age](figures/03_default_rate_by_age.png)
+![Correlation Heatmap](figures/04_correlation_heatmap.png)
 
 
 ---
