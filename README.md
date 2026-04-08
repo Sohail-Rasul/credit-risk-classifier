@@ -29,7 +29,7 @@ balances these two costs, not just maximize accuracy.
 - [x] Phase 1 — Data Understanding
 - [x] Phase 2 — Exploratory Data Analysis
 - [x] Phase 3 — Preprocessing
-- [ ] Phase 4 — Baseline Model (Logistic Regression)
+- [x] Phase 4 — Baseline Model (Logistic Regression)
 - [ ] Phase 5 — Improved Model (XGBoost)
 - [ ] Phase 6 — Evaluation & Threshold Analysis
 
