@@ -68,6 +68,53 @@ balances these two costs, not just maximize accuracy.
 - 80/20 train/test split with stratification to preserve class imbalance ratio
 - Applied StandardScaler — fit on train only to prevent data leakage
 
+### Phase 4 — Baseline Model (Logistic Regression)
+
+Logistic Regression was chosen as the baseline because it is interpretable,
+outputs probabilities directly, and reflects how traditional credit scoring
+models are built in practice.
+
+**Model configuration:**
+- `class_weight='balanced'` to counter the 93/7 class imbalance
+- `max_iter=1000` to ensure convergence
+- Features scaled with StandardScaler before training
+
+**The accuracy trap — proven:**
+
+| Model | Accuracy |
+|-------|----------|
+| Naive model (always predict No Default) | 93.3% |
+| Logistic Regression | 80.0% |
+
+The Logistic Regression scores *lower* accuracy than predicting nothing,
+yet it catches 75% of actual defaulters while the naive model catches zero.
+This is why accuracy is a misleading metric under class imbalance.
+
+**Results:**
+
+| Metric | No Default | Default |
+|--------|-----------|---------|
+| Precision | 0.98 | 0.21 |
+| Recall | 0.80 | 0.75 |
+| F1 Score | 0.88 | 0.33 |
+
+| Metric | Score |
+|--------|-------|
+| AUC-ROC | 0.8596 |
+
+**Interpreting the tradeoff:**
+
+The model operates in a high-recall, low-precision configuration for the
+default class, it catches 75% of bad loans but raises false alarms on many
+good customers. This reflects the `class_weight='balanced'` pushing the model
+toward caution. Whether this tradeoff is acceptable depends on business
+strategy. A bank prioritising loss prevention wants high recall; one focused
+on customer growth wants higher precision. 
+Phase 6 threshold analysis addresses this directly.
+
+![Confusion Matrix](figures/06_lr_confusion_matrix.png)
+![ROC Curve](figures/07_lr_roc_curve.png)
+![Feature Coefficients](figures/08_lr_coefficients.png)
 ---
 
 ## Results
