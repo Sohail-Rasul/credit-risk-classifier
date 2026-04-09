@@ -31,7 +31,7 @@ balances these two costs, not just maximize accuracy.
 - [x] Phase 3 — Preprocessing
 - [x] Phase 4 — Baseline Model (Logistic Regression)
 - [x] Phase 5 — Improved Model (XGBoost)
-- [ ] Phase 6 — Evaluation & Threshold Analysis
+- [x] Phase 6 — Evaluation & Threshold Analysis
 
 ---
 
@@ -148,8 +148,80 @@ scaling.
 ![ROC Comparison](figures/10_roc_curve_comparison.png)
 ![Feature Importance](figures/11_xgb_feature_importance.png)
 
+### Phase 6 — Threshold Analysis & Final Evaluation
+
+The default 0.5 decision threshold is rarely optimal for imbalanced problems.
+This phase makes the precision-recall tradeoff explicit across all thresholds
+and defines three business scenarios.
+
+**Threshold Scenarios:**
+
+| Scenario | Threshold | Precision | Recall | F1 |
+|----------|-----------|-----------|--------|----|
+| Conservative (catch more defaulters) | 0.20 | 0.144 | 0.906 | 0.248 |
+| Balanced (F1 optimised) | 0.67 | 0.390 | 0.526 | 0.448 |
+| Aggressive (fewer false alarms) | 0.50 | 0.282 | 0.680 | 0.399 |
+
+**Final model at optimised threshold (0.67):**
+- Defaulters caught: 52.6%
+- False alarm rate: 5.9%
+
+**Business recommendation:** Threshold selection reflects the bank's risk
+appetite rather than model quality. At threshold 0.20, the model catches
+90.6% of defaulters, suitable for a bank prioritising loss prevention. At
+threshold 0.67, it maintains a 5.9% false alarm rate, suitable for a bank
+prioritising customer experience. The AUC-ROC of 0.868 reflects the model's
+underlying ranking ability independent of threshold choice.
+
+![Threshold Analysis](figures/12_threshold_analysis.png)
+![Final Confusion Matrix](figures/13_final_confusion_matrix.png)
+
 ## Results
 
-*(populated after modelling)*
+### Model Performance
+
+| Model | AUC-ROC | Precision (Default) | Recall (Default) | F1 (Default) |
+|-------|---------|---------------------|------------------|--------------|
+| Naive Baseline (always predict 0) | — | — | 0.000 | 0.000 |
+| Logistic Regression | 0.8596 | 0.213 | 0.753 | 0.333 |
+| XGBoost | 0.8678 | 0.282 | 0.680 | 0.399 |
+
+XGBoost was selected as the final model. AUC-ROC of 0.868 means the model
+correctly ranks a defaulter above a non-defaulter 86.8% of the time.
+
+---
+
+### Threshold Analysis
+
+The decision threshold was tuned to reflect different business strategies.
+All results below use the XGBoost model.
+
+| Scenario | Threshold | Precision | Recall | F1 |
+|----------|-----------|-----------|--------|----|
+| Conservative (loss prevention) | 0.20 | 0.144 | 0.906 | 0.248 |
+| Balanced (F1 optimised) | 0.67 | 0.390 | 0.526 | 0.448 |
+| Aggressive (customer growth) | 0.50 | 0.282 | 0.680 | 0.399 |
+
+---
+
+### Key Takeaways
+
+**Accuracy is not the right metric here.** A naive model that never predicts
+default scores 93.3% accuracy while catching zero bad loans. Logistic
+Regression scores 80% accuracy, lower, yet catches 75% of actual defaulters.
+AUC-ROC and the precision-recall tradeoff are the correct evaluation framework
+for imbalanced credit data.
+
+**The most important feature was not obvious from EDA.** RevolvingUtilization
+showed near zero correlation with default in the heatmap due to extreme
+outliers distorting the calculation. After outlier capping, XGBoost identified
+it as the single most important feature (importance score 0.293). This
+highlights why correlation alone is insufficient for feature assessment.
+
+**Threshold selection is a business decision.** At threshold 0.20, the model
+catches 90.6% of defaulters, appropriate for a risk-averse lender. At
+threshold 0.67, it reduces the false alarm rate to 5.9%, appropriate for
+a growth-focused lender. The model provides the probability estimates;
+the business sets the threshold.
 
 ---
