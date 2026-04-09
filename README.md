@@ -134,13 +134,16 @@ scaling.
 | Model | AUC-ROC | Precision (Default) | Recall (Default) | F1 (Default) |
 |-------|---------|---------------------|------------------|--------------|
 | Logistic Regression | 0.8596 | 0.21 | 0.75 | 0.33 |
-| XGBoost | 0.868 | 0.282 | 0.680 | 0.399 |
+| XGBoost | 0.8680 | 0.28 | 0.68 | 0.40 |
 
-**Key finding: feature importance:**
-- Late payment history dominates as the strongest predictor, consistent with EDA
-- `RevolvingUtilizationOfUnsecuredLines` ranks significantly higher than its
-  raw correlation suggested, confirming the nonlinear relationship masked
-  by outliers in the heatmap
+**Key findings: feature importance**
+- `RevolvingUtilizationOfUnsecuredLines` is the single most important feature
+  (0.293), despite showing near-zero correlation in the heatmap due to outlier
+  distortion. XGBoost recovered the nonlinear signal that correlation missed.
+- Late payment columns combined account for 56% of total importance, consistent
+  with EDA showing default rate jumping sharply after just one late payment.
+- XGBoost trades lower recall (0.68 vs 0.75) for better precision (0.28 vs 0.21)
+  compared to Logistic Regression. Threshold analysis in Phase 6 addresses this.
 
 ![ROC Comparison](figures/10_roc_curve_comparison.png)
 ![Feature Importance](figures/11_xgb_feature_importance.png)
