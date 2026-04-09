@@ -30,7 +30,7 @@ balances these two costs, not just maximize accuracy.
 - [x] Phase 2 — Exploratory Data Analysis
 - [x] Phase 3 — Preprocessing
 - [x] Phase 4 — Baseline Model (Logistic Regression)
-- [ ] Phase 5 — Improved Model (XGBoost)
+- [x] Phase 5 — Improved Model (XGBoost)
 - [ ] Phase 6 — Evaluation & Threshold Analysis
 
 ---
@@ -116,6 +116,34 @@ Phase 6 threshold analysis addresses this directly.
 ![ROC Curve](figures/07_lr_roc_curve.png)
 ![Feature Coefficients](figures/08_lr_coefficients.png)
 ---
+
+### Phase 5 — Improved Model (XGBoost)
+
+XGBoost is a gradient boosted tree ensemble that builds 300 decision trees
+sequentially, each correcting the errors of the previous ones. Unlike Logistic
+Regression it captures non-linear relationships and does not require feature
+scaling.
+
+**Model configuration:**
+- `n_estimators=300`, `learning_rate=0.05`, `max_depth=5`
+- `scale_pos_weight=9` to handle class imbalance (ratio of negatives to positives)
+- Trained on unscaled features as tree models do not require scaling
+
+**Model Comparison:**
+
+| Model | AUC-ROC | Precision (Default) | Recall (Default) | F1 (Default) |
+|-------|---------|---------------------|------------------|--------------|
+| Logistic Regression | 0.8596 | 0.21 | 0.75 | 0.33 |
+| XGBoost | 0.868 | 0.282 | 0.680 | 0.399 |
+
+**Key finding: feature importance:**
+- Late payment history dominates as the strongest predictor, consistent with EDA
+- `RevolvingUtilizationOfUnsecuredLines` ranks significantly higher than its
+  raw correlation suggested, confirming the nonlinear relationship masked
+  by outliers in the heatmap
+
+![ROC Comparison](figures/10_roc_curve_comparison.png)
+![Feature Importance](figures/11_xgb_feature_importance.png)
 
 ## Results
 
